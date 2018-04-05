@@ -40,14 +40,19 @@ shift $((OPTIND-1))
 printf "Running step 1: Checking reads quality ... \n"
 
 
+
 # Find raw_reads
 # Find illumina seq adapters
-path=$( grep "raw_reads" $paths | cut -d ':' -f 2)
-adapters_path=$( grep "adapters" $paths | cut -d ':' -f 2)
+path=$( grep "raw_reads" $paths | cut -d ':' -f 2 )
+adapters_path=$( grep "adapters" $paths | cut -d ':' -f 2 )
+
 
 
 printf "\n"
-mkdir step1_rawRds_fastqc_report
+
+if [ ! -e step1_rawRds_fastqc_report ];then
+	mkdir step1_rawRds_fastqc_report
+fi
 
 cd step1_rawRds_fastqc_report
 
@@ -104,7 +109,9 @@ printf "Step 2: use trimmomatic to trim the raw reads ...\n"
 
 
 # entering trim reads folder
-mkdir $outfolder
+if [ ! -e $outfolder ];then
+	mkdir $outfolder
+fi
 printf "\n"
 printf "Setting parameters for trimmomatic\n"
 
@@ -159,8 +166,9 @@ printf "\nTrimming Completed!\n"
 
 printf "Now Fastqc is checking trimmed reads quality ... \n"
 
-
-mkdir step3_check_trimmed_QC
+if [ ! -e step3_check_trimmed_QC ];then
+	mkdir step3_check_trimmed_QC
+fi
 
 cd step3_check_trimmed_QC
 
@@ -457,7 +465,7 @@ echo "In the directory >>>> $v1_32_p2\n" >&2
 for i in {1..32};do
 	FQ=$( ls | grep ^cutadapt3_V_${i}_coped.fastq )
 	echo $FQ
-	python3 ../fastq2fasta.py -i $FQ -o $v1_32_p2_fa -d y
+	python3 ../../fastq2fasta.py -i $FQ -o $v1_32_p2_fa -d y
 done
 
 
@@ -467,7 +475,7 @@ echo "In the directory >>>> $d1_32_p2\n" >&2
 for i in {1..32};do
         FQ=$( ls | grep ^cutadapt3_D_${i}_coped.fastq )
         echo $FQ
-        python3 ../fastq2fasta.py -i $FQ -o $d1_32_p2_fa -d y
+        python3 ../../fastq2fasta.py -i $FQ -o $d1_32_p2_fa -d y
 done
 
 cd $k1_16_p2
@@ -475,7 +483,7 @@ echo "In the directory >>>> $k1_16_p2\n" >&2
 for i in {1..16};do
         FQ=$( ls | grep ^cutadapt3_K_${i}_coped.fastq )
         echo $FQ
-        python3 ../fastq2fasta.py -i $FQ -o $k1_16_p2_fa -d y
+        python3 ../../fastq2fasta.py -i $FQ -o $k1_16_p2_fa -d y
 done
 
 
@@ -485,11 +493,11 @@ echo "In the directory >>>> $k17_32_p2\n" >&2
 for i in {17..32};do
         FQ=$( ls | grep ^cutadapt3_K_${i}_coped.fastq )
         echo $FQ
-        python3 ../fastq2fasta.py -i $FQ -o $k17_32_p2_fa -d y
+        python3 ../../fastq2fasta.py -i $FQ -o $k17_32_p2_fa -d y
 done
 
 
-cd ..
+cd ../..
 
 mkdir combined_reads
 cd combined_reads
